@@ -10,7 +10,7 @@ const methodOverride = require('method-override');
 const ExpressError= require('./utiilities/expressError')
 const flash = require('connect-flash');
 // const joi = require('joi')
-const ejsMate=require('ejs-mate');//for partrials.... where u can reuse the headder and footer and can change body dynamically
+const ejsMate = require('ejs-mate');//for partrials.... where u can reuse the headder and footer and can change body dynamically
 
 const campgroundRoutes = require('./routes/campground')
 const reviewRoutes = require('./routes/review')
@@ -21,6 +21,7 @@ const User = require('./models/user')
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet=require('helmet');
 
+const PORT = process.env.PORT || 3000;
 
 const MongoStore = require('connect-mongo');
 
@@ -28,14 +29,26 @@ const MongoStore = require('connect-mongo');
 //'mongodb://127.0.0.1:27017/Yelp-camp'
 const dbUrl= process.env.db_url;
 // 'mongodb://127.0.0.1:27017/Yelp-camp'
-const connectDB = async()=>{
-mongoose.connect(dbUrl);
-const db = mongoose.connection;
-db.on("error",console.error.bind(console,"connection error:"));
-db.once("open",()=>{
-    console.log("database connected");
-});
-}
+
+
+
+// mongoose.connect('mongodb://127.0.0.1:27017/Yelp-camp');
+// const db = mongoose.connection;
+// db.on("error",console.error.bind(console,"connection error:"));
+// db.once("open",()=>{
+//     console.log("database connected");
+// });
+
+
+const connectDB = async () => {
+    try {
+      const conn = await mongoose.connect(dbUrl);
+      console.log(`MongoDB Connected: ${conn.connection.host}`);
+    } catch (error) {
+      console.log(error);
+      process.exit(1);
+    }
+  }
 
 
 const app= express();
@@ -165,10 +178,12 @@ app.use((err,req,res,next)=>{
     res.status(satusCode).render('errors',{err});
 })
 
-
+app.listen(3000,()=>{
+    console.log('lisining on port 3000');
+})
 
 connectDB().then(() => {
-    app.listen(3000,()=>{
-        console.log('lisining on port 3000');
+    app.listen(PORT, () => {
+        console.log("listening for requests");
     })
 })
