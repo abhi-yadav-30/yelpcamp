@@ -42,7 +42,7 @@ const dbUrl= process.env.db_url;
 
 const connectDB = async () => {
     try {
-      const conn = await mongoose.connect(dbUrl);
+      const conn = await mongoose.connect('mongodb://127.0.0.1:27017/Yelp-camp');
       console.log(`MongoDB Connected: ${conn.connection.host}`);
     } catch (error) {
       console.log(error);
@@ -178,9 +178,9 @@ app.use((err,req,res,next)=>{
     res.status(satusCode).render('errors',{err});
 })
 
-app.listen(3000,()=>{
-    console.log('lisining on port 3000');
-})
+// app.listen(3000,()=>{
+//     console.log('lisining on port 3000');
+// })
 
 connectDB().then(() => {
     app.listen(PORT, () => {
