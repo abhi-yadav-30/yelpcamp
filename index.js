@@ -28,13 +28,14 @@ const MongoStore = require('connect-mongo');
 //'mongodb://127.0.0.1:27017/Yelp-camp'
 const dbUrl= process.env.db_url;
 // 'mongodb://127.0.0.1:27017/Yelp-camp'
+const connectDB = async()=>{
 mongoose.connect(dbUrl);
 const db = mongoose.connection;
 db.on("error",console.error.bind(console,"connection error:"));
 db.once("open",()=>{
     console.log("database connected");
 });
-
+}
 
 
 const app= express();
@@ -165,6 +166,9 @@ app.use((err,req,res,next)=>{
 })
 
 
-app.listen(3000,()=>{
-    console.log('lisining on port 3000');
+
+connectDB().then(() => {
+    app.listen(3000,()=>{
+        console.log('lisining on port 3000');
+    })
 })
