@@ -42,7 +42,7 @@ const dbUrl= process.env.db_url;
 
 const connectDB = async () => {
     try {
-      const conn = await mongoose.connect('mongodb://127.0.0.1:27017/Yelp-camp');
+      const conn = await mongoose.connect(dbUrl);
       console.log(`MongoDB Connected: ${conn.connection.host}`);
     } catch (error) {
       console.log(error);
@@ -64,7 +64,7 @@ const secret=process.env.SECRET || 'thisshouldbesecret'
 
 
 const store = MongoStore.create({
-    mongoUrl: dbUrl, 
+    mongoUrl:dbUrl, 
     touchAfter: 24 * 60 * 60,
     crypto: {
         secret
@@ -184,6 +184,6 @@ app.use((err,req,res,next)=>{
 
 connectDB().then(() => {
     app.listen(PORT, () => {
-        console.log("listening for requests");
+        console.log(`listening for requests on port ${PORT}`);
     })
 })
